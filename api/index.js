@@ -23,7 +23,7 @@ app.use("/orders", orderRouter);
 
 
 app.get("/",(req,res)=>{
-    try { res.send("Hello from Express Server"); }
+    try { res.send("This is the server for Kelis's mini project!!"); }
     catch (error) { console.error("Query error:", error);
     res.send(" Sorry Error")
    }
