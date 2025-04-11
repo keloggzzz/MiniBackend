@@ -9,7 +9,11 @@ import orderRouter from "./routes/OrderRoutes.js";
 const app = express();
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+
+app.use(cors({
+  origin: "http://localhost:5173", // your frontend URL
+  credentials: true
+}));
 
 
 app.use("/items", itemRouter);
