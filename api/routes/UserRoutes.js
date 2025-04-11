@@ -45,4 +45,26 @@ userRouter.delete("/delUser", async (req, res) => {
     }
 });
 
+userRouter.post("/login", async (req, res) => {
+
+    const { username, password } = req.body;
+  
+    try {
+        const result = await pool.query(
+            "SELECT * FROM users WHERE username =" +username+ 
+            " AND password=" +password);
+        
+  
+            if (result.rows.length > 0) {
+                res.json({ success: true, user: result.rows[0] });
+              } else {
+                res.json({ success: false, error: "Invalid username or password" });
+              }
+            } catch (err) {
+              console.error("Login error:", err);
+              res.status(500).json({ success: false, error: "Server error" });
+            }
+          });
+
+
 export default userRouter;
