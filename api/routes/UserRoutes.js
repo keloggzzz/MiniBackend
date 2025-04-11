@@ -31,7 +31,7 @@ userRouter.get("/users", async (req, res) => {
 
 
 //deleting a single user. must say delUser?id=#
-userRouter.get("/delUser", async (req, res) => {
+userRouter.delete("/delUser", async (req, res) => {
     try {
         var id1 = req.query.id;
         console.log(id1);
