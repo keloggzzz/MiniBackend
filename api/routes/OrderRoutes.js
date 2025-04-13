@@ -7,7 +7,7 @@ import pool from "./PoolConnection.js";
 orderRouter.get("/orders", async (req, res) => {
     try {
       const result = await pool.query(`
-        SELECT o.id, o.user_id, o.totalprice, o.purchasedate,
+        SELECT o.id, o.user_id, o.total_price, o.purchase_date,
                i1.name AS item1_name, i2.name AS item2_name, i3.name AS item3_name
         FROM orders o
         LEFT JOIN items i1 ON o.item1 = i1.id
@@ -26,7 +26,7 @@ orderRouter.get("/orders", async (req, res) => {
     try {
       const id = parseInt(req.query.id);
       const result = await pool.query(`
-        SELECT o.id, o.user_id, o.totalprice, o.purchasedate,
+        SELECT o.id, o.user_id, o.total_price, o.purchase_date,
                i1.name AS item1_name, i2.name AS item2_name, i3.name AS item3_name
         FROM orders o
         LEFT JOIN items i1 ON o.item1 = i1.id
@@ -55,8 +55,9 @@ orderRouter.delete("/delOrder", async (req, res) => {
 
   //Add an order; may not be used in current implementation to reduce complexity
   orderRouter.post("/addOrder", async (req, res) => {
+    console.log("Adding Order...")
     try {
-        const { userid, item1, item2, item3 } = req.body;
+        const { user_id, item1, item2, item3 } = req.body;
 
         // Get all item prices to compute a total
         const items = [item1, item2, item3].filter(Boolean);
@@ -64,13 +65,13 @@ orderRouter.delete("/delOrder", async (req, res) => {
             items.map(id => pool.query("SELECT price FROM items WHERE id=$1", [id]))
         );
 
-        const totalprice = itemPrices.reduce((acc, res) => acc + Number(res.rows[0].price), 0);
+        const total_price = itemPrices.reduce((acc, res) => acc + Number(res.rows[0].price), 0);
 
         const result = await pool.query(`
-            INSERT INTO orders (userid, item1, item2, item3, totalprice, purchasedate)
+            INSERT INTO orders (user_id, item1, item2, item3, total_price, purchase_date)
             VALUES ($1, $2, $3, $4, $5, CURRENT_DATE)
             RETURNING *;
-        `, [userid, item1 || null, item2 || null, item3 || null, totalprice]);
+        `, [user_id, item1 || null, item2 || null, item3 || null, total_price]);
 
         res.json({ success: true, order: result.rows[0] });
     } catch (error) {
