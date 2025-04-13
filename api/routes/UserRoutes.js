@@ -71,5 +71,43 @@ userRouter.post("/login", async (req, res) => {
             }
           });
 
+          userRouter.post("/addUser", async (req, res) => {
+            const {
+              id,
+              firstname,
+              lastname,
+              email,
+              city,
+              zipcode,
+              username,
+              password,
+              role,
+            } = req.body;
+          
+            try {
+              const query = `
+                INSERT INTO users (id, firstname, lastname, email, city, zipcode, username, password, role)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+              `;
+              const values = [
+                id,
+                firstname,
+                lastname,
+                email,
+                city,
+                zipcode,
+                username,
+                password,
+                role,
+              ];
+              await pool.query(query, values);
+          
+              res.json({ success: true, message: "User registered successfully!" });
+            } catch (error) {
+              console.error("Error registering user:", error);
+              res.status(500).json({ success: false, message: "Error registering user." });
+            }
+          });
+
 
 export default userRouter;

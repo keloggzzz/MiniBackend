@@ -49,7 +49,7 @@ itemRouter.delete("/delItem", async (req, res) => {
 
     itemRouter.post("/addItem", async (req, res) => {
         console.log("additem called") //debug
-        const { name, description, price, rarity, stock } = req.body;
+        const { name, description, price, rarity, stock, picture } = req.body;
         console.log("inserting ", req.body)
       
         if (!name || !description) {
@@ -58,8 +58,8 @@ itemRouter.delete("/delItem", async (req, res) => {
       
         try {
           const result = await pool.query(
-            "INSERT INTO items (name, description, price, rarity, stock) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-            [name, description, price, rarity, stock || null]
+            "INSERT INTO items (name, description, price, rarity, stock, picture) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+            [name, description, price, rarity, stock, picture || null]
           );
       
           res.status(201).json({ success: true, item: result.rows[0] });

@@ -31,7 +31,7 @@ orderRouter.get("/getOrder", async (req, res) => {
     });
 
 //deleting a single order. must say delOrder?id=#
-orderRouter.get("/delOrder", async (req, res) => {
+orderRouter.delete("/delOrder", async (req, res) => {
     try {
         var id1 = req.query.id;
         console.log(id1);
