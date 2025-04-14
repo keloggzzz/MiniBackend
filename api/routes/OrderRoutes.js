@@ -5,11 +5,13 @@ import pool from "./PoolConnection.js";
 //Changed orders table to be functional. All orders will be limited to three items. 
 //Orders must be linked to a user, all items linked to an item in items table 
 orderRouter.get("/orders", async (req, res) => {
+  console.log("get all orders called")
     try {
       const result = await pool.query(`
-        SELECT o.id, o.user_id, o.total_price, o.purchase_date,
+        SELECT o.id, o.user_id, o.total_price, o.purchase_date, u.firstname, u.lastname,
                i1.name AS item1_name, i2.name AS item2_name, i3.name AS item3_name
         FROM orders o
+        LEFT JOIN users u ON o.user_id = u.id
         LEFT JOIN items i1 ON o.item1 = i1.id
         LEFT JOIN items i2 ON o.item2 = i2.id
         LEFT JOIN items i3 ON o.item3 = i3.id
@@ -23,20 +25,24 @@ orderRouter.get("/orders", async (req, res) => {
 
  //Get a single order. must say getorder?id=#
  orderRouter.get("/getOrder", async (req, res) => {
+  
     try {
       const id = parseInt(req.query.id);
       const result = await pool.query(`
-        SELECT o.id, o.user_id, o.total_price, o.purchase_date,
-               i1.name AS item1_name, i2.name AS item2_name, i3.name AS item3_name
+        SELECT 
+        o.id, o.user_id, o.total_price, o.purchase_date, u.firstname, u.lastname,
+          i1.name AS item1_name, i2.name AS item2_name, i3.name AS item3_name
         FROM orders o
+        LEFT JOIN users u ON o.user_id = u.id
         LEFT JOIN items i1 ON o.item1 = i1.id
         LEFT JOIN items i2 ON o.item2 = i2.id
         LEFT JOIN items i3 ON o.item3 = i3.id
-        WHERE o.id = $1`, [id]);
+        WHERE o.id = $1`, [id]); //get order, item names, and user name
   
       res.json({ rows: result.rows });
     } catch (error) {
       console.error("Query error:", error);
+      console.log(order.lastname)
       res.status(500).json({ error: "Database query failed" });
     }
   });
