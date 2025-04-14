@@ -59,7 +59,7 @@ orderRouter.delete("/delOrder", async (req, res) => {
     }
   });
 
-  //Add an order; may not be used in current implementation to reduce complexity
+  //Add an order
   orderRouter.post("/addOrder", async (req, res) => {
     console.log("Adding Order...")
     try {
