@@ -11,8 +11,8 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  //origin: "http://localhost:5173", // frontend URL
-  origin: "https://mini-project-nu-five.vercel.app",
+  origin: "http://localhost:5173", // frontend URL
+  //origin: "https://mini-project-nu-five.vercel.app",
   credentials: true
 }));
 

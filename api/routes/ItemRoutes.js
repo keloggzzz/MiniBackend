@@ -69,5 +69,27 @@ itemRouter.delete("/delItem", async (req, res) => {
         }
       });
 
+    itemRouter.put("/updateItem", async (req, res) => {
+        try {
+          const {id,name,description, price,rarity,stock,picture} = req.body;
+          console.log("inserting ", req.body)
+      
+          const qry = `
+            UPDATE items
+            SET name = $1, description = $2, price = $3, rarity = $4, stock = $5, picture = $6
+            WHERE id = $7
+          `;
+      
+          const values = [name, description, price, rarity, stock, picture, id];
+          const res = await pool.query(qry, values);
+      
+          res.json({ ans: 1 });
+        } catch (error) {
+          console.error("Query error:", error);
+          res.json({ ans: 0 });
+        }
+      });
+
+
 export default itemRouter;
 
