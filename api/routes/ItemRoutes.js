@@ -70,9 +70,10 @@ itemRouter.delete("/delItem", async (req, res) => {
       });
 
     itemRouter.put("/updateItem", async (req, res) => {
+        console.log("Calling update item!") //debug
         try {
           const {id,name,description, price,rarity,stock,picture} = req.body;
-          console.log("inserting ", req.body)
+          console.log("inserting ", req.body) //debug
       
           const qry = `
             UPDATE items
@@ -81,12 +82,12 @@ itemRouter.delete("/delItem", async (req, res) => {
           `;
       
           const values = [name, description, price, rarity, stock, picture, id];
-          const res = await pool.query(qry, values);
+          const result = await pool.query(qry, values);
       
-          res.json({ ans: 1 });
+          res.status(201).json({ success: true, item: result.rows[0] });
         } catch (error) {
           console.error("Query error:", error);
-          res.json({ ans: 0 });
+          res.status(500).json({ success: false, error: "Server error" });
         }
       });
 
